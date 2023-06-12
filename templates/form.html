@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<h1>Bomby</h1>
+    <title>Zgadnij słowo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        var timeLeft = 15;
+        var timer = setInterval(function() {
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                document.getElementById('countdown').innerHTML = 'Bomba! Prawidłowe słowo to: ' + document.getElementById('original_word').value;
+                document.getElementById('continue-button').style.display = 'block';
+            } else {
+                document.getElementById('countdown').innerHTML = timeLeft + ' sekund';
+            }
+            timeLeft -= 1;
+        }, 1000);
+
+        $(document).ready(function(){
+            $('#guess-form').on('submit', function(event){
+                event.preventDefault();
+                $.ajax({
+                    url: '/',
+                    method: 'post',
+                    data: $(this).serialize(),
+                    success: function(response){
+                        if (response.status == 'incorrect') {
+                            $('#error').text('Nieprawidłowe słowo!');
+                        } else {
+                            window.location.href = '/';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <form id="guess-form" method="POST">
+        <label for="word">Zgadnij słowo zawierające fragment: {{ fragment }}</label><br>
+        <input type="text" id="word" name="word"><br>
+        <div id="error" style="color: red;"></div>
+        <input type="hidden" id="fragment" name="fragment" value="{{ fragment }}">
+        <input type="hidden" id="original_word" name="original_word" value="{{ original_word }}">
+        <input type="submit" value="Sprawdź">
+    </form>
+    <div id="countdown">5 sekund</div>
+    <button id="continue-button" style="display: none;" onclick="window.location.href='/'">Kontynuuj</button>
+</body>
+</html>

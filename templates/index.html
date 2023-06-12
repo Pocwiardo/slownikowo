@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Word Checker</title>
+</head>
+<body>
+    <form method="POST">
+        <label for="word">Wpisz słowo:</label>
+        <input type="text" id="word" name="word" required>
+        <input type="submit" value="Sprawdź">
+    </form>
+    <p>{{ message }}</p>
+    <ul>
+        {% for word in words %}
+            <li>{{ word }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
